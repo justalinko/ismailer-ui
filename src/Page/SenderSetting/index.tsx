@@ -1,32 +1,14 @@
-import { Card  } from '../../molecules/card'
-import {Input , InputProps } from '../../atom/input';
-import '../../atom/button.css';
+import { Card } from "../../Molecules/Card";
 import React from "react";
+import { Button } from "../../Atom/Button";
 
-interface myProps {
+export interface SenderSettingPageProps {}
 
+interface State {
+  settings: number;
 }
 
-interface myState {
-  addComponent? : number
-}
-
-export class SenderSettingPage extends React.Component<myProps , myState> {
-  constructor(props : myProps){
-    super(props);
-
-    this.state = {
-      addComponent : 0
-    }
-  }
-
-  handleAddComponent(){
-    this.setState({
-      addComponent : +1
-    })
-  }
-
-
+export class SenderSettingPage extends React.Component<SenderSettingPageProps, State> {
   render() {
     return (
       <div style={{ marginLeft: "25%" }}>
@@ -36,19 +18,15 @@ export class SenderSettingPage extends React.Component<myProps , myState> {
         <div className="row">
           <div className="col-md-5">
             <div className="ml-3 mt-3">
-              <div className="card" style={{position : 'relative'}}>
+              <div className="card" style={{ position: "relative" }}>
                 <div className="card-body text-left">
                   <Card />
-                  <button className="button " onClick={() => this.handleAddComponent} >add</button>
-                  {
-                    this.state.addComponent
-                  }
+                  <Button button="Save" />
                 </div>
-             </div>
+              </div>
             </div>
           </div>
         </div>
-        
       </div>
     );
   }
