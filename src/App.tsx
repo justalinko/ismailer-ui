@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import "./Styles/w3.css";
+import 'bootstrap/dist/css/bootstrap.min.css'
 import { SenderSettingPage } from "./Page/SenderSetting";
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import { SmtpSettingPage } from "./Page/SmtpSetting";
