@@ -1,6 +1,6 @@
 
 
-#from{
+input{
     width: 80%;
     outline: none;
     border-radius: 4px;
@@ -11,14 +11,14 @@
     margin-top: 34px;
 }
 
-#from:focus{
+input:focus{
     border:2.3px solid rgb(23, 117, 180);
 
 }
 
 
 
-.inputan:focus-within label{
+.text-input:focus-within label{
     color: rgb(23, 117, 180) !important ;
     font-weight: 500;
 

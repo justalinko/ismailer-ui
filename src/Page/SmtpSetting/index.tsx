@@ -1,5 +1,6 @@
 import { Input } from "../../Atom/Input";
 import { Button } from "../../Atom/Button";
+import {Checkbox} from '../../Atom/checkbox'
 import React from "react";
 
 export interface SmtpSettingPageProps {}
@@ -17,6 +18,7 @@ export interface State {
 export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State> {
   state = {
     settings: [] as SmtpSetting[],
+    save :  false
   };
 
   onAddSetting() {
@@ -35,7 +37,20 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
     });
   }
 
+  addSaveButton(){
+    this.setState( {
+      save : <Button button="save" />
+      
+    })
+  }
+
   render() {
+    {
+    
+      if(this.state.settings.length === 1 ){
+        this.addSaveButton()
+      }
+     }
     return (
       <div style={{ marginLeft: "25%" }}>
         <div className="d-flex justify-content-center py-3 w3-red">
@@ -52,8 +67,12 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
                     <Input label="Port" value={setting.port} />
                     <Input label="User" value={setting.user} />
                     <Input label="Password" value={setting.password} />
+                    <Checkbox label="secure" idForCheckBox="secure" />
                   </div>
                 ))}
+
+            
+                {this.state.save}
                 <Button button="Add" onClick={() => this.onAddSetting()} />
               </div>
             </div>

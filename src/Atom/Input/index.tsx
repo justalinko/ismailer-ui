@@ -11,11 +11,11 @@ export class Input extends Component<InputProps> {
     const { label, value, ...props } = this.props;
 
     return (
-      <div className="d-flex flex-column text-left inputan" style={{ position: "relative" }}>
+      <div className="d-flex flex-column text-left text-input" style={{ position: "relative" }}>
         <label htmlFor="from" id="label">
           {label}
         </label>
-        <input type="text" {...props} value={value} />
+        <input type="text"  {...props} value={value} />
       </div>
     );
   }
