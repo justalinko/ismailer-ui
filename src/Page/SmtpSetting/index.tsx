@@ -14,11 +14,12 @@ export interface SmtpSetting {
 
 export interface State {
   settings: SmtpSetting[];
+  save : string
 }
 export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State> {
   state = {
     settings: [] as SmtpSetting[],
-    save :  false
+    save :  ''
   };
 
   onAddSetting() {
