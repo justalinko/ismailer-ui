@@ -38,10 +38,10 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
   }
 
   addSaveButton(){
-    this.setState( {
-      save : <Button button="save" />
+    // this.setState( {
+    //   save : <Button button="save" />
       
-    })
+    // })
   }
 
   render() {
@@ -58,8 +58,8 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
         </div>
 
         <div className="row">
-          <div className="col-md-6 m-3">
-            <div className="card">
+          <div className="col-md-7 m-3">
+            <div className="card" style={{ position: 'relative' }}>
               <div className="card-body">
                 {this.state.settings.map((setting, index) => (
                   <div key={index}>
@@ -71,7 +71,10 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
                   </div>
                 ))}
 
-            
+                <div className="d-flex flex-column" style={{ position : "absolute", right:"10px" , top:"10px"  }}>
+                  <Button button="save"  />
+                  <Button button="export"  />
+                </div>
                 {this.state.save}
                 <Button button="Add" onClick={() => this.onAddSetting()} />
               </div>
