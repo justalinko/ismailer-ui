@@ -34,24 +34,15 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
             user: "",
           },
         ],
+        save : 'hello'
       };
     });
   }
 
-  addSaveButton(){
-    // this.setState( {
-    //   save : <Button button="save" />
-      
-    // })
-  }
+ 
 
   render() {
-    {
-    
-      if(this.state.settings.length === 1 ){
-        this.addSaveButton()
-      }
-     }
+   
     return (
       <div style={{ marginLeft: "25%" }}>
         <div className="d-flex justify-content-center py-3 w3-red">
