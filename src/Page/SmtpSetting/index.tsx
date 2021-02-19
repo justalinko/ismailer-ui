@@ -1,26 +1,28 @@
-import { Input } from "../../Atom/Input";
-import { Button } from "../../Atom/Button";
-import {Checkbox} from '../../Atom/checkbox'
 import React from "react";
+import { Button } from "../../Atom/Button";
+import { SmtpSetting, SmtpSettingValue } from "../../Molecules/SmtpSetting";
 
 export interface SmtpSettingPageProps {}
 
-export interface SmtpSetting {
-  host: string;
-  port: string;
-  user: string;
-  password: string;
+export interface State {
+  settings: SmtpSettingValue[];
 }
 
-export interface State {
-  settings: SmtpSetting[];
-  save : string
-}
+const SETTING_KEY = "smtp-settings";
 export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State> {
   state = {
-    settings: [] as SmtpSetting[],
-    save :  ''
+    settings: JSON.parse(localStorage.getItem(SETTING_KEY) || "[]") as SmtpSettingValue[],
   };
+
+  onSettingUpdated(value: SmtpSettingValue, index: number) {
+    const updatedArray = this.state.settings;
+    updatedArray[index] = value;
+    this.setState({
+      settings: updatedArray,
+    });
+
+    localStorage.setItem(SETTING_KEY, JSON.stringify(updatedArray));
+  }
 
   onAddSetting() {
     this.setState((previousState) => {
@@ -34,15 +36,11 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
             user: "",
           },
         ],
-        save : 'hello'
       };
     });
   }
 
- 
-
   render() {
-   
     return (
       <div style={{ marginLeft: "25%" }}>
         <div className="d-flex justify-content-center py-3 w3-red">
@@ -51,23 +49,24 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
 
         <div className="row">
           <div className="col-md-7 m-3">
-            <div className="card" style={{ position: 'relative' }}>
+            <div className="card" style={{ position: "relative" }}>
               <div className="card-body">
                 {this.state.settings.map((setting, index) => (
-                  <div key={index}>
-                    <Input label="Host" value={setting.host} />
-                    <Input label="Port" value={setting.port} />
-                    <Input label="User" value={setting.user} />
-                    <Input label="Password" value={setting.password} />
-                    <Checkbox label="secure" idForCheckBox="secure" />
-                  </div>
+                  <SmtpSetting
+                    onValueChange={(value) => {
+                      this.onSettingUpdated(value, index);
+                    }}
+                    key={index.toString()}
+                    value={setting}
+                  />
                 ))}
 
-                <div className="d-flex flex-column" style={{ position : "absolute", right:"10px" , top:"10px"  }}>
-                  <Button button="save"  />
-                  <Button button="export"  />
-                </div>
-                {this.state.save}
+                {this.state.settings.length > 0 && (
+                  <div className="d-flex flex-column" style={{ position: "absolute", right: "10px", top: "10px" }}>
+                    <Button button="save" />
+                    <Button button="export" />
+                  </div>
+                )}
                 <Button button="Add" onClick={() => this.onAddSetting()} />
               </div>
             </div>

@@ -15,7 +15,7 @@ export class Input extends Component<InputProps> {
         <label htmlFor="from" id="label">
           {label}
         </label>
-        <input type="text"  {...props} value={value} />
+        <input {...props} value={value} />
       </div>
     );
   }
