@@ -47,10 +47,10 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
           <h1>SMTP Setting</h1>
         </div>
 
-        <div className="row">
-          <div className="col-md-7 m-3">
-            <div className="card" style={{ position: "relative" }}>
-              <div className="card-body">
+        <div className="row" style={{ marginBottom : '100px' }}>
+         
+            
+              
                 {this.state.settings.map((setting, index) => (
                   <SmtpSetting
                     onValueChange={(value) => {
@@ -61,17 +61,21 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
                   />
                 ))}
 
-                {this.state.settings.length > 0 && (
-                  <div className="d-flex flex-column" style={{ position: "absolute", right: "10px", top: "10px" }}>
-                    <Button button="save" />
-                    <Button button="export" />
-                  </div>
-                )}
-                <Button button="Add" onClick={() => this.onAddSetting()} />
-              </div>
-            </div>
-          </div>
+              
+              
+            
+          
         </div>
+        <div className="bg-white shadow-lg w-100" style={{ display : 'flex' , position: 'fixed' , bottom: '0' , height:'fit-content' , padding: '15px 20px' , boxSizing: 'border-box'  }}>
+          <Button button="Add" onClick={() => this.onAddSetting()} />
+          {this.state.settings.length > 0 && (
+            <div className="d-flex ml-4">
+              <Button button="save"  />
+              <Button button="export" />
+            </div>
+          )}
+        </div>
+                
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import { Input } from "../../Atom/Input";
 import React from "react";
 import { Checkbox } from "../../Atom/checkbox";
+import { Button } from '../../Atom/Button'
 
 export interface SmtpSettingProps {
   value: SmtpSettingValue;
@@ -38,13 +39,20 @@ export class SmtpSetting extends React.Component<SmtpSettingProps, State> {
 
   render() {
     return (
-      <div key={this.props.key}>
-        <Input name="host" label="Host" value={this.state.host} onChange={(e) => this.onChange(e)} />
-        <Input name="port" label="Port" value={this.state.port} onChange={(e) => this.onChange(e)} />
-        <Input name="user" label="User" value={this.state.user} onChange={(e) => this.onChange(e)} />
-        <Input name="password" label="Password" value={this.state.password} onChange={(e) => this.onChange(e)} />
-        <Checkbox name="secure" label="secure" idForCheckBox="secure" onChange={(e) => this.onChange(e)} />
-      </div>
+      
+       <div className="col-md-6 mt-4" key={this.props.key} style={{ marginRight: '0 !important' }}>
+        <div className="card mx-auto" style={{ width:'90' }}>
+            <div className="card-body">
+              <Input name="host" label="Host" value={this.state.host} onChange={(e) => this.onChange(e)} />
+              <Input name="port" label="Port" value={this.state.port} onChange={(e) => this.onChange(e)} />
+              <Input name="user" label="User" value={this.state.user} onChange={(e) => this.onChange(e)} />
+              <Input name="password" label="Password" value={this.state.password} onChange={(e) => this.onChange(e)} />
+              <Checkbox name="secure" label="secure" idForCheckBox="secure" onChange={(e) => this.onChange(e)} />
+              <Button button="remove" />
+            </div>
+          </div>
+       </div>
+      
     );
   }
 }
