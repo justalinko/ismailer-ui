@@ -1,27 +1,35 @@
 import React from "react";
 import { Button } from "../../Atom/Button";
-import { SmtpSetting, SmtpSettingValue } from "../../Molecules/SmtpSetting";
+import { SmtpSettingDto } from "../../Dto/SmtpSettingDto";
+import { SmtpSetting } from "../../Molecules/SmtpSetting";
+import { SmtpRepository } from "../../Repository/SmtpRepository";
 
 export interface SmtpSettingPageProps {}
 
 export interface State {
-  settings: SmtpSettingValue[];
+  settings: SmtpSettingDto[];
 }
-
-const SETTING_KEY = "smtp-settings";
 export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State> {
   state = {
-    settings: JSON.parse(localStorage.getItem(SETTING_KEY) || "[]") as SmtpSettingValue[],
+    settings: SmtpRepository.loadSavedSetting(),
   };
 
-  onSettingUpdated(value: SmtpSettingValue, index: number) {
+  onSettingUpdated(value: SmtpSettingDto, index: number) {
     const updatedArray = this.state.settings;
     updatedArray[index] = value;
     this.setState({
       settings: updatedArray,
     });
 
-    localStorage.setItem(SETTING_KEY, JSON.stringify(updatedArray));
+    SmtpRepository.saveSetting(updatedArray);
+  }
+
+  onSettingRemoved(index: number) {
+    this.setState((previousState) => {
+      previousState.settings.splice(index, 1);
+      SmtpRepository.saveSetting(previousState.settings);
+      return previousState;
+    });
   }
 
   onAddSetting() {
@@ -32,12 +40,28 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
           {
             host: "",
             password: "",
-            port: "",
+            port: 0,
             user: "",
+            secure: false,
           },
         ],
       };
     });
+  }
+
+  async importSetting() {
+    const settingStr = await SmtpRepository.import();
+    const settings = JSON.parse(settingStr);
+
+    this.setState({
+      settings,
+    });
+
+    SmtpRepository.saveSetting(settings);
+  }
+
+  exportSetting() {
+    SmtpRepository.export(this.state.settings);
   }
 
   render() {
@@ -47,35 +71,29 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
           <h1>SMTP Setting</h1>
         </div>
 
-        <div className="row" style={{ marginBottom : '100px' }}>
-         
-            
-              
-                {this.state.settings.map((setting, index) => (
-                  <SmtpSetting
-                    onValueChange={(value) => {
-                      this.onSettingUpdated(value, index);
-                    }}
-                    key={index.toString()}
-                    value={setting}
-                  />
-                ))}
-
-              
-              
-            
-          
+        <div className="row" style={{ marginBottom: "100px" }}>
+          {this.state.settings.map((setting, index) => (
+            <SmtpSetting
+              onValueChange={(value) => {
+                this.onSettingUpdated(value, index);
+              }}
+              onRemove={() => {
+                this.onSettingRemoved(index);
+              }}
+              key={index}
+              value={setting}
+            />
+          ))}
         </div>
-        <div className="bg-white shadow-lg w-100" style={{ display : 'flex' , position: 'fixed' , bottom: '0' , height:'fit-content' , padding: '15px 20px' , boxSizing: 'border-box'  }}>
+        <div className="bg-white shadow-lg w-100" style={{ display: "flex", position: "fixed", bottom: "0", height: "fit-content", padding: "15px 20px", boxSizing: "border-box" }}>
           <Button button="Add" onClick={() => this.onAddSetting()} />
           {this.state.settings.length > 0 && (
             <div className="d-flex ml-4">
-              <Button button="save"  />
-              <Button button="export" />
+              <Button button="import" onClick={() => this.importSetting()} />
+              <Button button="export" onClick={() => this.exportSetting()} />
             </div>
           )}
         </div>
-                
       </div>
     );
   }
