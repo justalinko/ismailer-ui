@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "../../Atom/Button";
-import { Checkbox } from "../../Atom/checkbox";
+import { Checkbox } from "../../Atom/Checkbox";
 import { Input } from "../../Atom/Input";
 import { SmtpSettingDto } from "../../Dto/SmtpSettingDto";
 
