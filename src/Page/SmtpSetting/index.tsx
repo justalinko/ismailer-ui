@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../../Atom/Button";
 import { SmtpSettingDto } from "../../Dto/SmtpSettingDto";
-import { SmtpSetting } from "../../Molecules/SmtpSetting";
+import { SmtpSettingCard } from "../../Molecules/SmtpSettingCard";
 import { SmtpRepository } from "../../Repository/SmtpRepository";
 
 export interface SmtpSettingPageProps {}
@@ -73,7 +73,7 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
 
         <div className="row" style={{ marginBottom: "100px" }}>
           {this.state.settings.map((setting, index) => (
-            <SmtpSetting
+            <SmtpSettingCard
               onValueChange={(value) => {
                 this.onSettingUpdated(value, index);
               }}

@@ -9,7 +9,7 @@ export interface SmtpSettingProps extends React.DetailedHTMLProps<React.HTMLAttr
   onValueChange(value: SmtpSettingDto): void;
   onRemove(): void;
 }
-export class SmtpSetting extends React.Component<SmtpSettingProps> {
+export class SmtpSettingCard extends React.Component<SmtpSettingProps> {
   onInputChange(e: React.ChangeEvent<any>, isNumber: boolean = false) {
     const name = e.target.name;
     const value = e.target.value!;
