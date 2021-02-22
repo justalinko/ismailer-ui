@@ -27,9 +27,9 @@ function renderMenu(menuItem: MenuItem) {
   );
 }
 
-const MainMenu = ({ items }: MainMenuProps) => {
+const MainMenu = ({ items, ...props }: MainMenuProps) => {
   return (
-    <Menu mode="inline" theme="dark" inlineCollapsed={true}>
+    <Menu mode="inline" theme="dark" {...props}>
       {items.map((menu) => renderMenu(menu))}
     </Menu>
   );

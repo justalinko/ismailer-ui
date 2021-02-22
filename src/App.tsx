@@ -6,6 +6,7 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
 import MainMenu from "./Molecules/MainMenu";
+import EditableTable from "./Molecules/Table";
 
 const { Header, Sider, Content } = Layout;
 
@@ -27,6 +28,7 @@ class App extends React.Component {
           <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
             <div className="logo" />
             <MainMenu
+              inlineCollapsed={this.state.collapsed}
               items={[
                 {
                   label: "Setting",
@@ -76,9 +78,10 @@ class App extends React.Component {
                 margin: "24px 16px",
                 padding: 24,
                 minHeight: 280,
+                overflow: "scroll",
               }}
             >
-              Content
+              <EditableTable />
             </Content>
             <Footer about="test">Footer</Footer>
           </Layout>
