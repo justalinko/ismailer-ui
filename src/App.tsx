@@ -6,7 +6,7 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
 import MainMenu from "./Molecules/MainMenu";
-import EditableTable from "./Molecules/Table";
+import { SmtpSettingPage } from "./Page/SmtpSetting";
 
 const { Header, Sider, Content } = Layout;
 
@@ -81,7 +81,7 @@ class App extends React.Component {
                 overflow: "scroll",
               }}
             >
-              <EditableTable />
+              <SmtpSettingPage />
             </Content>
             <Footer about="test">Footer</Footer>
           </Layout>

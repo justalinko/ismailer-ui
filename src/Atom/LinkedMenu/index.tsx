@@ -7,7 +7,7 @@ export interface LinkedMenuProps extends RouteComponentProps<{}>, MenuItemProps 
   label: string;
 }
 
-const LinkedMenu: FunctionComponent<LinkedMenuProps> = ({ label, to, history, onClick, ...props }) => {
+const LinkedMenu: FunctionComponent<LinkedMenuProps> = ({ label, to, history, onClick, staticContext, ...props }) => {
   return (
     <Menu.Item
       onClick={(e) => {

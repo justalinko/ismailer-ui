@@ -14,15 +14,15 @@ export interface MenuItem {
   subMenu?: MenuItem[];
 }
 
-function renderMenu(menuItem: MenuItem) {
+function renderMenu(menuItem: MenuItem, key: React.Key) {
   const subMenu = menuItem.subMenu;
   return subMenu && subMenu.length > 1 ? (
-    <SubMenu title={menuItem.label} icon={menuItem.icon}>
-      {subMenu.map((menu) => renderMenu(menu))}
+    <SubMenu key={key} title={menuItem.label} icon={menuItem.icon}>
+      {subMenu.map((menu, index) => renderMenu(menu, index))}
     </SubMenu>
   ) : (
-    <LinkedMenu to={menuItem.to} label={menuItem.label} icon={menuItem.icon}>
-      {menuItem.subMenu && menuItem.subMenu.map((menu) => renderMenu(menu))}
+    <LinkedMenu key={key} to={menuItem.to} label={menuItem.label} icon={menuItem.icon}>
+      {menuItem.subMenu && menuItem.subMenu.map((menu, index) => renderMenu(menu, index))}
     </LinkedMenu>
   );
 }
@@ -30,7 +30,7 @@ function renderMenu(menuItem: MenuItem) {
 const MainMenu = ({ items, ...props }: MainMenuProps) => {
   return (
     <Menu mode="inline" theme="dark" {...props}>
-      {items.map((menu) => renderMenu(menu))}
+      {items.map((menu, index) => renderMenu(menu, index))}
     </Menu>
   );
 };
