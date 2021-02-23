@@ -18,11 +18,11 @@ function renderMenu(menuItem: MenuItem, key: React.Key) {
   const subMenu = menuItem.subMenu;
   return subMenu && subMenu.length > 1 ? (
     <SubMenu key={key} title={menuItem.label} icon={menuItem.icon}>
-      {subMenu.map((menu, index) => renderMenu(menu, index))}
+      {subMenu.map((menu, index) => renderMenu(menu, index + menu.label))}
     </SubMenu>
   ) : (
     <LinkedMenu key={key} to={menuItem.to} label={menuItem.label} icon={menuItem.icon}>
-      {menuItem.subMenu && menuItem.subMenu.map((menu, index) => renderMenu(menu, index))}
+      {menuItem.subMenu && menuItem.subMenu.map((menu, index) => renderMenu(menu, index + menu.label))}
     </LinkedMenu>
   );
 }
@@ -30,7 +30,7 @@ function renderMenu(menuItem: MenuItem, key: React.Key) {
 const MainMenu = ({ items, ...props }: MainMenuProps) => {
   return (
     <Menu mode="inline" theme="dark" {...props}>
-      {items.map((menu, index) => renderMenu(menu, index))}
+      {items.map((menu, index) => renderMenu(menu, index + menu.label))}
     </Menu>
   );
 };
