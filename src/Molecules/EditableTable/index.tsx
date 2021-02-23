@@ -73,7 +73,8 @@ function EditableTable<T extends EditableRecord>({ columns, datasource, onRowCha
           <span>
             <Typography.Link disabled={editingKey !== ""} onClick={() => edit(record)}>
               Edit
-            </Typography.Link>{" "}
+            </Typography.Link>
+            {" | "}
             {datasource.length >= 1 ? (
               <Popconfirm title="Sure to delete?" onConfirm={() => onRowDeleted && onRowDeleted(record, record.key)}>
                 <Typography.Link disabled={editingKey !== ""}>Delete</Typography.Link>
