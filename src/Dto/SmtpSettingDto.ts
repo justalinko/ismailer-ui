@@ -1,5 +1,4 @@
 export interface SmtpSettingDto {
-  key: number;
   host: string;
   port: number;
   user: string;

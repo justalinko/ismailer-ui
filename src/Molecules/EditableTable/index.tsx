@@ -5,7 +5,7 @@ import { Table, Popconfirm, Form, Typography } from "antd";
 import EditableCell, { EditableCellType } from "../../Atom/EditableCell";
 import "./style.css";
 import * as yup from "yup";
-import { ColumnsType, ColumnType } from "antd/lib/table";
+import { ColumnsType, ColumnType, TableProps } from "antd/lib/table";
 
 export interface EditableColumn<T> extends ColumnType<T> {
   editable?: boolean;
@@ -14,27 +14,32 @@ export interface EditableColumn<T> extends ColumnType<T> {
   type?: EditableCellType;
 }
 
-export interface EditableTableProps<T> {
+export interface EditableTableProps<T> extends TableProps<T> {
   columns: EditableColumn<T>[];
   datasource: T[];
-  onRowChanged?: (row: T, key: React.Key) => void;
-  onRowDeleted?: (row: T, key: React.Key) => void;
+  includeDeleteOperation?: boolean;
+  onRowChanged?: (row: T, index: number) => void;
+  onRowDeleted?: (row: T, index: number) => void;
 }
 
-export interface EditableRecord {
-  key: React.Key;
-}
+type EditableRecord<T> = { key: React.Key } & T;
 
-function EditableTable<T extends EditableRecord>({ columns, datasource, onRowChanged, onRowDeleted }: EditableTableProps<T>) {
+function EditableTable<T extends object>({ columns, onRowChanged, onRowDeleted, includeDeleteOperation, ...props }: EditableTableProps<T>) {
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState("");
 
-  const isEditing = (record: T) => record.key === editingKey;
+  const datasource = props.datasource.map<EditableRecord<T>>((record, index) => ({
+    ...record,
+    key: index,
+  }));
+
+  const isEditing = (record: EditableRecord<T>) => record.key === editingKey;
 
   console.log("datasource is", datasource);
 
-  const edit = (record: Partial<T>) => {
+  const edit = (record: Partial<EditableRecord<T>>) => {
     form.setFieldsValue({ ...record });
+    // TODO: add more proper way to delete/update the record
     setEditingKey(record.key as string);
   };
 
@@ -45,7 +50,7 @@ function EditableTable<T extends EditableRecord>({ columns, datasource, onRowCha
   const save = async (key: React.Key) => {
     try {
       const row = (await form.validateFields()) as T;
-      if (onRowChanged) onRowChanged(row, key);
+      if (onRowChanged) onRowChanged(row, key as number);
 
       setEditingKey("");
     } catch (errInfo) {
@@ -58,7 +63,7 @@ function EditableTable<T extends EditableRecord>({ columns, datasource, onRowCha
     {
       title: "Operation",
       dataIndex: "operation",
-      render: (_: any, record: T) => {
+      render: (_: any, record: EditableRecord<T>) => {
         const editable = isEditing(record);
         return editable ? (
           <span>
@@ -74,9 +79,10 @@ function EditableTable<T extends EditableRecord>({ columns, datasource, onRowCha
             <Typography.Link disabled={editingKey !== ""} onClick={() => edit(record)}>
               Edit
             </Typography.Link>
-            {" | "}
-            {datasource.length >= 1 ? (
-              <Popconfirm title="Sure to delete?" onConfirm={() => onRowDeleted && onRowDeleted(record, record.key)}>
+
+            {includeDeleteOperation && " | "}
+            {datasource.length >= 1 && includeDeleteOperation ? (
+              <Popconfirm title="Sure to delete?" onConfirm={() => onRowDeleted && onRowDeleted(record, record.key as number)}>
                 <Typography.Link disabled={editingKey !== ""}>Delete</Typography.Link>
               </Popconfirm>
             ) : null}
@@ -84,13 +90,14 @@ function EditableTable<T extends EditableRecord>({ columns, datasource, onRowCha
         );
       },
     },
-  ].map((col) => {
+    //@ts-ignore
+  ].map((col: EditableColumn<EditableRecord<T>>) => {
     if (!col.editable) {
       return col;
     }
     return {
       ...col,
-      onCell: (record: T) => ({
+      onCell: (record: EditableRecord<T>) => ({
         record,
         inputType: col.type || "text",
         dataIndex: col.dataIndex,
@@ -105,6 +112,7 @@ function EditableTable<T extends EditableRecord>({ columns, datasource, onRowCha
   return (
     <Form form={form} component={false}>
       <Table
+        {...props}
         components={{
           body: {
             cell: EditableCell,
@@ -112,7 +120,7 @@ function EditableTable<T extends EditableRecord>({ columns, datasource, onRowCha
         }}
         bordered
         dataSource={datasource}
-        columns={mergedColumns as ColumnsType<T>}
+        columns={mergedColumns as ColumnsType<any>}
         rowClassName="editable-row"
         pagination={{
           onChange: cancel,

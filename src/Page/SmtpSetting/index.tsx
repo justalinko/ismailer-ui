@@ -8,10 +8,12 @@ import { SmtpRepository } from "../../Repository/SmtpRepository";
 export interface SmtpSettingPageProps {}
 export interface State {
   settings: SmtpSettingDto[];
+  selectedRowKeys: React.Key[];
 }
 export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State> {
   state = {
     settings: SmtpRepository.loadSavedSetting(),
+    selectedRowKeys: [],
   };
 
   onSettingUpdated(value: SmtpSettingDto, index: number) {
@@ -28,27 +30,29 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
     SmtpRepository.saveSetting(updatedArray);
   }
 
-  onSettingRemoved(index: number) {
-    console.log("removed", index);
-
+  removeSelectedSettings() {
     this.setState((previousState) => {
       const settings = [...previousState.settings];
-      settings.splice(index, 1);
+
+      const indices = this.state.selectedRowKeys;
+
+      for (const index of indices) {
+        settings.splice(index, 1);
+      }
       SmtpRepository.saveSetting(settings);
       return {
         settings,
+        selectedRowKeys: [],
       };
     });
   }
 
   onAddSetting() {
-    // @ts-ignore
     this.setState((previousState) => {
       const addSettings = [
         ...previousState.settings,
         {
-          key: previousState.settings.length,
-          host: undefined,
+          host: "",
           password: "",
           port: 0,
           user: "",
@@ -79,7 +83,12 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
   }
 
   render() {
-    console.log("rerender", this.state.settings.length);
+    const rowSelection = {
+      selectedRowKeys: this.state.selectedRowKeys,
+      onChange: (selectedRowKeys: React.Key[]) => this.setState({ selectedRowKeys }),
+    };
+
+    console.log(this.state.selectedRowKeys);
 
     return (
       <div>
@@ -94,13 +103,14 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
         <Button onClick={() => this.exportSetting()} type="primary" style={{ marginBottom: 16, marginLeft: 20 }}>
           Export
         </Button>
+
+        <Button disabled={this.state.selectedRowKeys.length < 1} onClick={() => this.removeSelectedSettings()} type="primary" style={{ marginBottom: 16, marginLeft: 20 }}>
+          Delete
+        </Button>
+
         <EditableTable
+          rowSelection={rowSelection}
           columns={[
-            {
-              dataIndex: "key",
-              editable: false,
-              title: "Key",
-            },
             {
               dataIndex: "host",
               type: "text",
@@ -142,8 +152,7 @@ export class SmtpSettingPage extends React.Component<SmtpSettingPageProps, State
             },
           ]}
           datasource={this.state.settings}
-          onRowChanged={(row, key) => this.onSettingUpdated(row, key as number)}
-          onRowDeleted={(row, key) => this.onSettingRemoved(key as number)}
+          onRowChanged={(row, index) => this.onSettingUpdated(row, index)}
         />
       </div>
     );
