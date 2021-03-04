@@ -1,43 +1,77 @@
-import { SenderSettingCard } from "../../Molecules/SenderSettingCard";
+import { FormOutlined, IdcardOutlined, MailOutlined } from "@ant-design/icons";
+import { Button, Form, Input, notification, PageHeader } from "antd";
 import React from "react";
-import { Button } from "../../Atom/Button";
 import { SenderSettingDto } from "../../Dto/SenderSettingDto";
 import { SenderRepository } from "../../Repository/SenderRepository";
-
 export interface SenderSettingPageProps {}
 
-interface State {
-  setting: SenderSettingDto;
-}
+export function SenderSettingPage() {
+  const [form] = Form.useForm<SenderSettingDto>();
 
-export class SenderSettingPage extends React.Component<SenderSettingPageProps, State> {
-  state = {
-    setting: SenderRepository.loadSavedSetting(),
+  const setting = SenderRepository.loadSavedSetting();
+
+  function onSave(setting: SenderSettingDto) {
+    SenderRepository.saveSetting(setting);
+    openNotificationWithIcon();
+  }
+
+  const openNotificationWithIcon = () => {
+    notification.success({
+      message: "Data Saved Successfully",
+    });
   };
 
-  onSave() {
-    SenderRepository.saveSetting(this.state.setting);
-  }
-
-  render() {
-    return (
-      <div style={{ marginLeft: "25%" }}>
-        <div className="w3-container text-center py-3 w3-red">
-          <h1>Sender Setting</h1>
-        </div>
-        <div className="row">
-          <div className="col-md-5">
-            <div className="ml-3 mt-3">
-              <div className="card" style={{ position: "relative" }}>
-                <div className="card-body text-left">
-                  <SenderSettingCard value={this.state.setting} onValueChange={(setting) => this.setState({ setting })} />
-                  <Button button="Save" onClick={() => this.onSave()} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  return (
+    <div style={{ width: "50%", margin: "auto" }}>
+      <PageHeader className="site-page-header" title="Sender Setting Page" />
+      <Form layout="vertical" form={form} onFinish={onSave} size="large" initialValues={setting}>
+        <Form.Item
+          name="fromEmail"
+          rules={[
+            {
+              type: "email",
+              message: "The input is not valid E-mail!",
+            },
+            {
+              required: true,
+              message: "Please input sender E-mail",
+            },
+          ]}
+          label="Sender Email"
+          labelCol={{}}
+        >
+          <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Sender Email" />
+        </Form.Item>
+        <Form.Item
+          name="fromName"
+          label="Sender Name"
+          rules={[
+            {
+              required: true,
+              message: "Please input sender name",
+            },
+          ]}
+        >
+          <Input prefix={<IdcardOutlined className="site-form-item-icon" />} placeholder="Sender Name" />
+        </Form.Item>
+        <Form.Item
+          label="Subject"
+          name="subject"
+          rules={[
+            {
+              required: true,
+              message: "Please input email subject",
+            },
+          ]}
+        >
+          <Input prefix={<FormOutlined className="site-form-item-icon" />} placeholder="Subject" />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
+            Save
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
+  );
 }

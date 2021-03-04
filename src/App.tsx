@@ -3,9 +3,12 @@ import { Layout } from "antd";
 import "antd/dist/antd.css";
 import { Footer } from "antd/lib/layout/layout";
 import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import MainMenu from "./Molecules/MainMenu";
+import { AboutPage } from "./Page/About";
+import { LicensePage } from "./Page/License";
+import { SenderSettingPage } from "./Page/SenderSetting";
 import { SmtpSettingPage } from "./Page/SmtpSetting";
 
 const { Header, Sider, Content } = Layout;
@@ -22,13 +25,15 @@ class App extends React.Component {
   };
 
   render() {
+    console.log(this.state.collapsed);
+
     return (
       <Router>
         <Layout style={{ height: "100vh" }}>
-          <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
+          <Sider collapsible collapsed={this.state.collapsed}>
             <div className="logo" />
             <MainMenu
-              inlineCollapsed={this.state.collapsed}
+              inlineCollapsed={false}
               items={[
                 {
                   label: "Setting",
@@ -37,10 +42,12 @@ class App extends React.Component {
                     {
                       label: "SMTP Setting",
                       icon: <MailOutlined />,
+                      to: "/smtp-setting",
                     },
                     {
                       label: "Sender Setting",
                       icon: <SendOutlined />,
+                      to: "/sender-setting",
                     },
                   ],
                 },
@@ -55,10 +62,12 @@ class App extends React.Component {
                     {
                       label: "License",
                       icon: <SafetyCertificateOutlined />,
+                      to: "/license",
                     },
                     {
                       label: "About This Program",
                       icon: <InfoCircleOutlined />,
+                      to: "/about",
                     },
                   ],
                 },
@@ -75,13 +84,17 @@ class App extends React.Component {
             <Content
               className="site-layout-background"
               style={{
-                margin: "24px 16px",
                 padding: 24,
                 minHeight: 280,
                 overflow: "scroll",
               }}
             >
-              <SmtpSettingPage />
+              <Switch>
+                <Route exact path="/smtp-setting" component={SmtpSettingPage} />
+                <Route exact path="/sender-setting" component={SenderSettingPage} />
+                <Route exact path="/license" component={LicensePage} />
+                <Route exact path="/about" component={AboutPage} />
+              </Switch>
             </Content>
             <Footer about="test">Footer</Footer>
           </Layout>

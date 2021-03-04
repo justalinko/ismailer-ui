@@ -17,7 +17,7 @@ export interface MenuItem {
 function renderMenu(menuItem: MenuItem, key: React.Key) {
   const subMenu = menuItem.subMenu;
   return subMenu && subMenu.length > 1 ? (
-    <SubMenu key={key} title={menuItem.label} icon={menuItem.icon}>
+    <SubMenu key={"sub" + key} title={menuItem.label} icon={menuItem.icon}>
       {subMenu.map((menu, index) => renderMenu(menu, index + menu.label))}
     </SubMenu>
   ) : (
